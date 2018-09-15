@@ -88,6 +88,7 @@ func (this *SkipList) InsertNode(value interface{}, rank []uint32, update []*Ski
 			update[i] = this.head
 			update[i].SetSpan(i, this.length)
 		}
+		this.level = level
 	}
 
 	newNode := NewSkipListNode(level, value)
@@ -96,7 +97,7 @@ func (this *SkipList) InsertNode(value interface{}, rank []uint32, update []*Ski
 		update[i].SetForward(i, newNode)
 
 		newNode.SetSpan(i, update[i].Span(i)-(rank[0]-rank[i]))
-		update[i].SetSpan(i, rank[0]-rank[i])
+		update[i].SetSpan(i, rank[0]-rank[i]+1)
 	}
 
 	for i := int(level); i < int(this.level); i++ {
@@ -178,8 +179,10 @@ func (this *SkipList) GetRank(value interface{}) uint32 {
 func (this *SkipList) GetNodeByRank(rank uint32) *SkipListNode {
 	if rank > 0 {
 		var traversed uint32
-		curNode := this.head
+		var curNode *SkipListNode
 		for i := int(this.level - 1); i >= 0; i-- {
+			traversed = 0
+			curNode = this.head
 			for nextNode := curNode.Forward(i); nextNode != nil && traversed+curNode.Span(i) <= rank; nextNode = nextNode.Forward(i) {
 				traversed += curNode.Span(i)
 				curNode = nextNode

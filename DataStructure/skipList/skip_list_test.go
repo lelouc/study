@@ -56,7 +56,11 @@ func PrintRankList(sk *SkipList) {
 	for node != nil {
 		if node != head {
 			rank++
-			val, _ := node.Value().(*Value)
+			val, ok := node.Value().(*Value)
+			if !ok {
+				fmt.Println("sssss")
+			}
+
 			fmt.Printf("%d\t%d\t%d\t", rank, val.Score, val.Key)
 		}
 		node = node.Next()
