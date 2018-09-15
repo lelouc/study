@@ -73,7 +73,7 @@ func (this *SkipList) Insert(value interface{}) *SkipListNode {
 		}
 		for nextNode := curNode.Forward(i); nextNode != nil && this.Less(nextNode.value, value); nextNode = nextNode.Forward(i) {
 			rank[i] += nextNode.Span(i)
-			curNode := nextNode
+			curNode = nextNode
 		}
 		update[i] = curNode
 	}
@@ -166,7 +166,7 @@ func (this *SkipList) GetRank(value interface{}) uint32 {
 	for i := int(this.level - 1); i >= 0; i-- {
 		for nextNode := curNode.Forward(i); nextNode != nil && this.LessEqual(nextNode.value, value); nextNode = nextNode.Forward(i) {
 			rank += curNode.Span(i)
-			curNode := nextNode
+			curNode = nextNode
 		}
 		if curNode != this.head && this.Equal(curNode.value, value) {
 			return rank
